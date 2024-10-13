@@ -9,7 +9,7 @@ import {
   AppFontSize,
 } from '../assets/styles/default-styles';
 
-export default function GoBackScreen({text}) {
+export default function GoBackGameScreen({text}) {
   const navigation = useNavigation();
 
   return (
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     padding: 12,
-    backgroundColor: AppColors.amarillo,
+    backgroundColor: AppColors.celeste,
   },
 });

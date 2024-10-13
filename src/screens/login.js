@@ -5,28 +5,24 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
+  Image,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from 'react-native';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-  faEye,
-  faEyeSlash,
-  faEnvelope,
-  faLock,
-} from '@fortawesome/free-solid-svg-icons';
 import {AuthContext} from '../utils/auth.context';
 import useAuthenticationApi from '../api/authentication';
 import showToast from '../functions/showToast';
 import auth from '@react-native-firebase/auth';
+import {AppColors} from '../assets/styles/default-styles';
+import App from '../../App';
 
 const LoginScreen = ({navigation}) => {
   const {signIn} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [wobble] = useState(new Animated.Value(0));
 
   const {doLogin} = useAuthenticationApi(
     email,
@@ -37,11 +33,11 @@ const LoginScreen = ({navigation}) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      showToast('error', 'Por favor, complete todos los campos.', 3000);
+      showToast('error', 'Por favor, completa todos los campos.', 3000);
+      wobbleAnimation();
       return;
     }
     await doLogin();
-    navigation.navigate('Home', {userPassword: password});
   };
 
   const easyLogin = async () => {
@@ -51,153 +47,146 @@ const LoginScreen = ({navigation}) => {
         'adminuno@yopmail.com',
         '12345678',
       );
-      navigation.navigate('Home', {userPassword: '12345678'});
+      navigation.navigate('Home');
     } catch (error) {
       console.error('Error en inicio rápido:', error);
-      showToast('error', 'Error en inicio rápido. Intente nuevamente.', 3000);
+      showToast('error', 'Error en inicio rápido. Intenta de nuevo.', 3000);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const wobbleAnimation = () => {
+    Animated.sequence([
+      Animated.timing(wobble, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(wobble, {
+        toValue: -1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(wobble, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
   return (
-    <ImageBackground
-      source={require('../assets/img/login-background.png')}
-      style={styles.backgroundImage}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View style={styles.overlay}>
-          <Text style={styles.title}>Bienvenido</Text>
-          <View style={styles.inputContainer}>
-            <FontAwesomeIcon icon={faEnvelope} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#B0B0B0"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <FontAwesomeIcon icon={faLock} style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Contraseña"
-              placeholderTextColor="#B0B0B0"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
-                style={styles.eyeIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            style={[styles.button, isLoading && styles.buttonDisabled]}
-            onPress={handleLogin}
-            disabled={isLoading}>
-            <Text style={styles.buttonText}>
-              {isLoading ? 'Cargando...' : 'Iniciar Sesión'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.quickLoginButton,
-              isLoading && styles.buttonDisabled,
-            ]}
-            onPress={easyLogin}
-            disabled={isLoading}>
-            <Text style={styles.buttonText}>Inicio Rápido</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
-            style={styles.registerLink}>
-            <Text style={styles.registerText}>
-              ¿No tenes una cuenta? Registrate
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </ImageBackground>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Image source={require('../assets/img/bebe.png')} style={styles.logo} />
+        <Text style={styles.title}>¡Hola, amigo!</Text>
+        <Animated.View style={{transform: [{translateX: wobble}]}}>
+          <TextInput
+            style={styles.input}
+            placeholder="Correo electrónico"
+            placeholderTextColor="#8E8E8E"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Contraseña"
+            placeholderTextColor="#8E8E8E"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+        </Animated.View>
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.buttonDisabled]}
+          onPress={handleLogin}
+          disabled={isLoading}>
+          <Text style={styles.buttonText}>
+            {isLoading ? '¡Cargando...!' : '¡Vamos a aprender!'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.buttonEasyLogin, isLoading && styles.buttonDisabled]}
+          onPress={easyLogin}
+          disabled={isLoading}>
+          <Text style={styles.buttonText}>Inicio rápido</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.registerButton]}
+          onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.buttonText}>¡Quiero una cuenta nueva!</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: AppColors.celeste,
   },
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    padding: 5,
-    borderRadius: 10,
-    margin: 20,
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: AppColors.tomate,
     marginBottom: 30,
     textAlign: 'center',
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 25,
-    marginBottom: 15,
-    paddingHorizontal: 15,
-  },
-  inputIcon: {
-    color: '#FFFFFF',
-    marginRight: 10,
-  },
   input: {
-    flex: 1,
-    color: '#FFFFFF',
-    paddingVertical: 15,
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 25,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
-  },
-  eyeIcon: {
-    color: '#FFFFFF',
+    borderWidth: 3,
+    borderColor: AppColors.verde, // Verde
+    color: 'black',
   },
   button: {
-    backgroundColor: '#4A90E2',
-    padding: 15,
+    backgroundColor: AppColors.rosa,
     borderRadius: 25,
+    padding: 15,
+    width: '100%',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
+  },
+  buttonEasyLogin: {
+    backgroundColor: AppColors.tomate,
+    borderRadius: 25,
+    padding: 15,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#7F8C8D',
+    backgroundColor: '#D3D3D3',
   },
-  quickLoginButton: {
-    backgroundColor: '#2ECC71',
+  registerButton: {
+    backgroundColor: AppColors.verde, // Verde
+    marginTop: 10,
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  registerLink: {
-    marginTop: 20,
-  },
-  registerText: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontSize: 16,
   },
 });
 

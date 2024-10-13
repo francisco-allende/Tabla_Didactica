@@ -4,37 +4,40 @@ import SplashScreen from './screens/splash';
 import LoginScreen from './screens/login';
 import HomeScreen from './screens/home';
 import RegisterScreen from './screens/register';
+import GameScreen from './screens/game';
 
 const Stack = createStackNavigator();
 
 const MainNavigation = () => {
   return (
     <Stack.Navigator initialRouteName="Splash">
-      {/* Splash al iniciar la app */}
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
         options={{headerShown: false}}
       />
 
-      {/* Login */}
       <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{headerShown: false}}
       />
 
-      {/* Register */}
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
         options={{headerShown: false}}
       />
 
-      {/* Home  */}
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Game"
+        component={GameScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

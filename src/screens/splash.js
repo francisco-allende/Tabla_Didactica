@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5D5D61',
+    backgroundColor: AppColors.celeste,
   },
   icon: {
     width: 150,
