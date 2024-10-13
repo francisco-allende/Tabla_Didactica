@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "20979929290",
+    "project_id": "tabla-didactica-b1db7",
+    "storage_bucket": "tabla-didactica-b1db7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20979929290:android:7554c1cdccd6766ff7a433",
+        "android_client_info": {
+          "package_name": "com.tabladidactica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzkw1OTSEKTopjTnPpi6Uz9FjtmQgjUI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
