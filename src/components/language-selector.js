@@ -16,6 +16,7 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
       style={[
         styles.container,
         orientation === 'LANDSCAPE' && styles.landscapeContainer,
+        orientation === 'PORTRAIT' && styles.portraitContainer,
       ]}>
       {languages.map(lang => (
         <TouchableOpacity
@@ -36,6 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    padding: 10,
+  },
+  portraitContainer: {
+    justifyContent: 'center',
     padding: 10,
   },
   landscapeContainer: {

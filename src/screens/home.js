@@ -56,6 +56,7 @@ const HomeScreen = () => {
         style={[
           styles.container,
           orientation === 'LANDSCAPE' && styles.landscapeContainer,
+          orientation === 'PORTRAIT' && styles.portraitContainer,
         ]}>
         <Text style={styles.title}>¡Vamos a Aprender!</Text>
 
@@ -63,6 +64,7 @@ const HomeScreen = () => {
           style={[
             styles.contentContainer,
             orientation === 'LANDSCAPE' && styles.landscapeContentContainer,
+            orientation === 'PORTRAIT' && styles.portraitContentContainer,
           ]}>
           <View
             style={[
@@ -80,6 +82,7 @@ const HomeScreen = () => {
             style={[
               styles.selectorContainer,
               orientation === 'LANDSCAPE' && styles.landscapeSelectorContainer,
+              orientation === 'PORTRAIT' && styles.portraitSelectorContainer,
             ]}>
             <Text style={styles.subtitle}>Elige un tema:</Text>
             <ThemeSelector
@@ -93,6 +96,7 @@ const HomeScreen = () => {
           style={[
             styles.playButton,
             orientation === 'LANDSCAPE' && styles.landscapePlayButton,
+            orientation === 'PORTRAIT' && styles.portraitPlayButton,
           ]}
           onPress={startGame}>
           <Image
@@ -115,11 +119,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  landscapeContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    paddingTop: 0,
-  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -131,22 +130,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  landscapeContentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-start',
-    marginTop: 0,
-    flexGrow: 1,
-  },
   selectorContainer: {
     backgroundColor: AppColors.blanco,
     borderRadius: 20,
     padding: 15,
     marginBottom: 20,
-  },
-  landscapeSelectorContainer: {
-    flex: 1,
-    marginHorizontal: 10,
   },
   subtitle: {
     fontSize: 24,
@@ -164,11 +152,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
   },
-  landscapePlayButton: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-  },
   playButtonImage: {
     width: 40,
     height: 40,
@@ -178,6 +161,63 @@ const styles = StyleSheet.create({
     color: AppColors.blanco,
     fontSize: 24,
     fontWeight: 'bold',
+  },
+
+  //portrait
+  portraitContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  portraitContentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 20,
+    flexGrow: 0.6,
+  },
+  portraitSelectorContainer: {
+    backgroundColor: AppColors.blanco,
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 20,
+    marginHorizontal: 0,
+    flex: 1,
+  },
+  portraitPlayButton: {
+    backgroundColor: AppColors.lima,
+    borderRadius: 30,
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+  },
+  //landscape
+  landscapeContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingTop: 0,
+  },
+  landscapeContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'flex-start',
+    marginTop: 0,
+    flexGrow: 1,
+  },
+  landscapeSelectorContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  landscapePlayButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
   },
 });
 

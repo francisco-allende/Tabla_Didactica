@@ -16,6 +16,7 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
       style={[
         styles.container,
         orientation === 'LANDSCAPE' && styles.landscapeContainer,
+        orientation === 'PORTRAIT' && styles.portraitContainer,
       ]}>
       {themes.map(theme => (
         <TouchableOpacity
@@ -36,6 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    padding: 10,
+  },
+  portraitContainer: {
+    justifyContent: 'center',
     padding: 10,
   },
   landscapeContainer: {
