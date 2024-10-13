@@ -5,14 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import GoBackGameScreen from '../components/go-back-game';
+import GoBackScreen from '../components/go-back';
 import LanguageSelector from '../components/language-selector';
 import ThemeSelector from '../components/theme-selector';
 import {AppColors} from '../assets/styles/default-styles';
-import {useOrientation} from '../functions/orientation';
+import {useOrientation} from '../hooks/useOrientation';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -50,64 +50,75 @@ const HomeScreen = () => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        orientation === 'LANDSCAPE' && styles.landscapeContainer,
-      ]}>
-      <GoBackGameScreen />
-      <Text style={styles.title}>¡Vamos a Aprender!</Text>
-
+    <SafeAreaView style={styles.safeArea}>
+      <GoBackScreen />
       <View
         style={[
-          styles.contentContainer,
-          orientation === 'LANDSCAPE' && styles.landscapeContentContainer,
+          styles.container,
+          orientation === 'LANDSCAPE' && styles.landscapeContainer,
         ]}>
-        <View style={styles.selectorContainer}>
-          <Text style={styles.subtitle}>Elige un idioma:</Text>
-          <LanguageSelector
-            onSelectLanguage={handleLanguageSelect}
-            selectedLanguage={selectedLanguage}
-          />
+        <Text style={styles.title}>¡Vamos a Aprender!</Text>
+
+        <View
+          style={[
+            styles.contentContainer,
+            orientation === 'LANDSCAPE' && styles.landscapeContentContainer,
+          ]}>
+          <View
+            style={[
+              styles.selectorContainer,
+              orientation === 'LANDSCAPE' && styles.landscapeSelectorContainer,
+            ]}>
+            <Text style={styles.subtitle}>Elige un idioma:</Text>
+            <LanguageSelector
+              onSelectLanguage={handleLanguageSelect}
+              selectedLanguage={selectedLanguage}
+            />
+          </View>
+
+          <View
+            style={[
+              styles.selectorContainer,
+              orientation === 'LANDSCAPE' && styles.landscapeSelectorContainer,
+            ]}>
+            <Text style={styles.subtitle}>Elige un tema:</Text>
+            <ThemeSelector
+              onSelectTheme={handleThemeSelect}
+              selectedTheme={selectedTheme}
+            />
+          </View>
         </View>
 
-        <View style={styles.selectorContainer}>
-          <Text style={styles.subtitle}>Elige un tema:</Text>
-          <ThemeSelector
-            onSelectTheme={handleThemeSelect}
-            selectedTheme={selectedTheme}
+        <TouchableOpacity
+          style={[
+            styles.playButton,
+            orientation === 'LANDSCAPE' && styles.landscapePlayButton,
+          ]}
+          onPress={startGame}>
+          <Image
+            source={require('../assets/img/rocket-play.png')}
+            style={styles.playButtonImage}
           />
-        </View>
+          <Text style={styles.playButtonText}>¡Despegar!</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.playButton} onPress={startGame}>
-        <Image
-          source={require('../assets/img/rocket-play.png')}
-          style={styles.playButtonImage}
-        />
-        <Text style={styles.playButtonText}>¡Despegar!</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  safeArea: {
+    flex: 1,
     backgroundColor: AppColors.amarillo,
+  },
+  container: {
+    flex: 1,
     padding: 20,
   },
   landscapeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  contentContainer: {
-    flex: 1,
-  },
-  landscapeContentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingTop: 0,
   },
   title: {
     fontSize: 32,
@@ -116,17 +127,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  subtitle: {
-    fontSize: 24,
-    color: AppColors.verde,
-    marginTop: 20,
-    marginBottom: 10,
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  landscapeContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'flex-start',
+    marginTop: 0,
+    flexGrow: 1,
   },
   selectorContainer: {
     backgroundColor: AppColors.blanco,
     borderRadius: 20,
     padding: 15,
     marginBottom: 20,
+  },
+  landscapeSelectorContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  subtitle: {
+    fontSize: 24,
+    color: AppColors.verde,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   playButton: {
     backgroundColor: AppColors.lima,
@@ -135,7 +161,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     marginTop: 20,
+  },
+  landscapePlayButton: {
+    position: 'absolute',
+    bottom: 20,
     alignSelf: 'center',
   },
   playButtonImage: {

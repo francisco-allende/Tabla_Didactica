@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/styles/default-styles';
-import {useOrientation} from '../functions/orientation';
+import {useOrientation} from '../hooks/useOrientation';
 
 const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
   const orientation = useOrientation();
@@ -29,7 +23,6 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
           style={[
             styles.themeButton,
             selectedTheme === theme.code && styles.selectedTheme,
-            orientation === 'LANDSCAPE' && styles.landscapeThemeButton,
           ]}
           onPress={() => onSelectTheme(theme.code)}>
           <Image source={theme.icon} style={styles.themeIcon} />
@@ -46,14 +39,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   landscapeContainer: {
-    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 1,
   },
   themeButton: {
     padding: 5,
     borderRadius: 10,
-  },
-  landscapeThemeButton: {
-    marginBottom: 10,
   },
   selectedTheme: {
     backgroundColor: AppColors.celeste,

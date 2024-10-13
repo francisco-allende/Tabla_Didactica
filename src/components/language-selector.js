@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/styles/default-styles';
-import {useOrientation} from '../functions/orientation';
+import {useOrientation} from '../hooks/useOrientation';
 
 const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
   const orientation = useOrientation();
@@ -29,7 +23,6 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
           style={[
             styles.flagButton,
             selectedLanguage === lang.code && styles.selectedFlag,
-            orientation === 'LANDSCAPE' && styles.landscapeFlagButton,
           ]}
           onPress={() => onSelectLanguage(lang.code)}>
           <Image source={lang.flag} style={styles.flagImage} />
@@ -46,14 +39,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   landscapeContainer: {
-    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 1,
   },
   flagButton: {
     padding: 5,
     borderRadius: 10,
-  },
-  landscapeFlagButton: {
-    marginBottom: 10,
   },
   selectedFlag: {
     backgroundColor: AppColors.celeste,

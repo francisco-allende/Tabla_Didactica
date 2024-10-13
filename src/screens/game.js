@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   score: {
     fontSize: 20,
-    color: AppColors.rosa,
+    color: AppColors.azul,
     textAlign: 'center',
     marginTop: 2,
   },
