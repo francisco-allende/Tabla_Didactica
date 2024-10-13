@@ -15,7 +15,7 @@ import useAuthenticationApi from '../api/authentication';
 import showToast from '../functions/showToast';
 import auth from '@react-native-firebase/auth';
 import {AppColors} from '../assets/styles/default-styles';
-import App from '../../App';
+import {useOrientation} from '../hooks/useOrientation';
 
 const LoginScreen = ({navigation}) => {
   const {signIn} = useContext(AuthContext);
@@ -23,6 +23,7 @@ const LoginScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [wobble] = useState(new Animated.Value(0));
+  const orientation = useOrientation();
 
   const {doLogin} = useAuthenticationApi(
     email,
@@ -80,47 +81,71 @@ const LoginScreen = ({navigation}) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <View style={styles.innerContainer}>
+      {orientation === 'LANDSCAPE' && (
+        <Text style={[styles.title, styles.landscapeTitle]}>¡Hola, amigo!</Text>
+      )}
+      <View
+        style={[
+          styles.innerContainer,
+          orientation === 'LANDSCAPE' && styles.landscapeInnerContainer,
+        ]}>
+        {orientation !== 'LANDSCAPE' && (
+          <Text style={styles.title}>¡Hola, amigo!</Text>
+        )}
         <Image source={require('../assets/img/bebe.png')} style={styles.logo} />
-        <Text style={styles.title}>¡Hola, amigo!</Text>
-        <Animated.View style={{transform: [{translateX: wobble}]}}>
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electrónico"
-            placeholderTextColor="#8E8E8E"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            placeholderTextColor="#8E8E8E"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-        </Animated.View>
-        <TouchableOpacity
-          style={[styles.button, isLoading && styles.buttonDisabled]}
-          onPress={handleLogin}
-          disabled={isLoading}>
-          <Text style={styles.buttonText}>
-            {isLoading ? '¡Cargando...!' : '¡Vamos a aprender!'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttonEasyLogin, isLoading && styles.buttonDisabled]}
-          onPress={easyLogin}
-          disabled={isLoading}>
-          <Text style={styles.buttonText}>Inicio rápido</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.registerButton]}
-          onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.buttonText}>¡Quiero una cuenta nueva!</Text>
-        </TouchableOpacity>
+        <View
+          style={
+            orientation === 'LANDSCAPE'
+              ? styles.landscapeContentContainer
+              : styles.contentContainer
+          }>
+          <Animated.View style={{transform: [{translateX: wobble}]}}>
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electrónico"
+              placeholderTextColor="#8E8E8E"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#8E8E8E"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </Animated.View>
+          <View
+            style={
+              orientation === 'LANDSCAPE' && styles.landscapeButtonContainer
+            }>
+            <TouchableOpacity
+              style={[styles.button, isLoading && styles.buttonDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}>
+              <Text style={styles.buttonText}>
+                {isLoading ? '¡Cargando...!' : '¡Vamos a aprender!'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonEasyLogin,
+                isLoading && styles.buttonDisabled,
+              ]}
+              onPress={easyLogin}
+              disabled={isLoading}>
+              <Text style={styles.buttonText}>Inicio rápido</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.registerButton]}
+              onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.buttonText}>¡Quiero una cuenta nueva!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -137,6 +162,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  landscapeInnerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
   logo: {
     width: 150,
     height: 150,
@@ -149,6 +179,22 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
   },
+  landscapeTitle: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+  },
+  contentContainer: {
+    width: '100%',
+  },
+  landscapeContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flex: 1,
+  },
   input: {
     width: '100%',
     backgroundColor: '#FFFFFF',
@@ -157,8 +203,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     borderWidth: 3,
-    borderColor: AppColors.verde, // Verde
+    borderColor: AppColors.verde,
     color: 'black',
+  },
+  landscapeButtonContainer: {
+    marginLeft: 20,
   },
   button: {
     backgroundColor: AppColors.rosa,
@@ -180,7 +229,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3',
   },
   registerButton: {
-    backgroundColor: AppColors.verde, // Verde
+    backgroundColor: AppColors.verde,
     marginTop: 10,
   },
   buttonText: {

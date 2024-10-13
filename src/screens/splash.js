@@ -14,7 +14,7 @@ const SplashScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/img/icono.png')} style={styles.icon} />
-      <Text style={styles.title}>Tabla Didáactica</Text>
+      <Text style={styles.title}>Tabla Didáctica</Text>
       <Text style={styles.info}>Francisco Allende</Text>
       <Text style={styles.info}>División A141-2</Text>
     </View>
@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
+    color: AppColors.azul,
     marginBottom: 20,
   },
   info: {
     fontSize: 18,
-    color: 'white',
+    color: AppColors.azul,
     marginBottom: 10,
   },
 });

@@ -13,6 +13,7 @@ import {
 import useAuthenticationApi from '../api/authentication';
 import showToast from '../functions/showToast';
 import {AppColors} from '../assets/styles/default-styles';
+import {useOrientation} from '../hooks/useOrientation';
 
 const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ const RegisterScreen = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [wobble] = useState(new Animated.Value(0));
+  const orientation = useOrientation();
 
   const {registerUser} = useAuthenticationApi(
     email,
@@ -66,51 +68,74 @@ const RegisterScreen = ({navigation}) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <View style={styles.innerContainer}>
+      {orientation === 'LANDSCAPE' && (
+        <Text style={[styles.title, styles.landscapeTitle]}>
+          ¡Crea tu cuenta mágica!
+        </Text>
+      )}
+      <View
+        style={[
+          styles.innerContainer,
+          orientation === 'LANDSCAPE' && styles.landscapeInnerContainer,
+        ]}>
+        {orientation !== 'LANDSCAPE' && (
+          <Text style={styles.title}>¡Crea tu cuenta mágica!</Text>
+        )}
         <Image source={require('../assets/img/bebe.png')} style={styles.logo} />
-        <Text style={styles.title}>¡Crea tu cuenta mágica!</Text>
-        <Animated.View style={{transform: [{translateX: wobble}]}}>
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electrónico"
-            placeholderTextColor="#8E8E8E"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña secreta"
-            placeholderTextColor="#8E8E8E"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirma tu contraseña secreta"
-            placeholderTextColor="#8E8E8E"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
-        </Animated.View>
-        <TouchableOpacity
-          style={[styles.button, isLoading && styles.buttonDisabled]}
-          onPress={handleRegister}
-          disabled={isLoading}>
-          <Text style={styles.buttonText}>
-            {isLoading
-              ? '¡Preparando tu aventura...!'
-              : '¡Crear mi cuenta mágica!'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.loginButton]}
-          onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>¡Ya tengo una cuenta!</Text>
-        </TouchableOpacity>
+        <View
+          style={
+            orientation === 'LANDSCAPE'
+              ? styles.landscapeContentContainer
+              : styles.contentContainer
+          }>
+          <Animated.View style={{transform: [{translateX: wobble}]}}>
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electrónico"
+              placeholderTextColor="#8E8E8E"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña secreta"
+              placeholderTextColor="#8E8E8E"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirma tu contraseña secreta"
+              placeholderTextColor="#8E8E8E"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
+          </Animated.View>
+          <View
+            style={
+              orientation === 'LANDSCAPE' && styles.landscapeButtonContainer
+            }>
+            <TouchableOpacity
+              style={[styles.button, isLoading && styles.buttonDisabled]}
+              onPress={handleRegister}
+              disabled={isLoading}>
+              <Text style={styles.buttonText}>
+                {isLoading
+                  ? '¡Preparando tu aventura...!'
+                  : '¡Crear mi cuenta mágica!'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.loginButton]}
+              onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.buttonText}>¡Ya tengo una cuenta!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -127,6 +152,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  landscapeInnerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
   logo: {
     width: 150,
     height: 150,
@@ -135,9 +165,26 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '', // Rosa
+    color: AppColors.rosa,
     marginBottom: 30,
     textAlign: 'center',
+  },
+  landscapeTitle: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+  },
+  contentContainer: {
+    width: '100%',
+  },
+  landscapeContentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flex: 1,
+    marginTop: 30,
   },
   input: {
     width: '100%',
@@ -147,11 +194,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     borderWidth: 3,
-    borderColor: AppColors.naranja, // Naranja
+    borderColor: AppColors.naranja,
     color: 'black',
   },
+  landscapeButtonContainer: {
+    marginLeft: 20,
+  },
   button: {
-    backgroundColor: AppColors.lima, // Lima
+    backgroundColor: AppColors.lima,
     borderRadius: 25,
     padding: 15,
     width: '100%',
@@ -162,7 +212,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3',
   },
   loginButton: {
-    backgroundColor: AppColors.rosa, // Rosa
+    backgroundColor: AppColors.rosa,
     marginTop: 10,
   },
   buttonText: {
