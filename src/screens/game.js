@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Sound from 'react-native-sound';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -108,19 +108,25 @@ const GameScreen = ({route, navigation}) => {
   const currentSound = useRef(null);
   const orientation = useOrientation();
 
-  useEffect(() => {
+  const initializeGame = useCallback(() => {
+    setCurrentQuestionIndex(0);
+    setScore(0);
     const loadedQuestions = getQuestions(language, theme);
     setQuestions(loadedQuestions);
     if (loadedQuestions.length > 0) {
       loadAndPlayAudio(loadedQuestions[0]);
     }
+  }, [language, theme]);
+
+  useEffect(() => {
+    initializeGame();
 
     return () => {
       if (currentSound.current) {
         currentSound.current.release();
       }
     };
-  }, [language, theme]);
+  }, [initializeGame]);
 
   const loadAndPlayAudio = question => {
     if (currentSound.current) {
@@ -156,7 +162,7 @@ const GameScreen = ({route, navigation}) => {
   const handleAnswer = selectedAnswer => {
     const currentQuestion = questions[currentQuestionIndex];
     if (selectedAnswer === currentQuestion.answer) {
-      setScore(score + 1);
+      setScore(prevScore => prevScore + 1);
     }
 
     if (currentQuestionIndex < questions.length - 1) {
@@ -166,7 +172,12 @@ const GameScreen = ({route, navigation}) => {
         return nextIndex;
       });
     } else {
-      navigation.navigate('Result', {score, total: questions.length});
+      navigation.navigate('Result', {
+        score: score + (selectedAnswer === currentQuestion.answer ? 1 : 0),
+        total: questions.length,
+        language,
+        theme,
+      });
     }
   };
 
@@ -267,7 +278,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   optionLandscape: {
-    width: '30%',
+    width: '20%',
   },
   optionImage: {
     width: '80%',
