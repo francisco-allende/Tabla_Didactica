@@ -46,7 +46,7 @@ const HomeScreen = () => {
     const theme =
       selectedTheme ||
       ['colors', 'numbers', 'animals'][Math.floor(Math.random() * 3)];
-    navigation.navigate('Game', {language, theme});
+    navigation.navigate('Game', {language: language, theme: theme});
   };
 
   return (
