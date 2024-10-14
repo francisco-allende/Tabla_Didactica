@@ -1,8 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Sound from 'react-native-sound';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faRotateRight} from '@fortawesome/free-solid-svg-icons';
 import getQuestions from '../utils/getQuestions';
 import {AppColors} from '../assets/styles/default-styles';
+import {useOrientation} from '../hooks/useOrientation';
+import GoBackScreen from '../components/go-back';
 
 Sound.setCategory('Playback');
 
@@ -41,12 +45,68 @@ const audioFiles = {
   'pt-animals-trompa': require('../assets/sounds/pt-animals-trompa.mp3'),
 };
 
+const optionImages = {
+  // Numbers
+  2: require('../assets/img/game/dos.png'),
+  3: require('../assets/img/game/tres.png'),
+  4: require('../assets/img/game/cuatro.png'),
+  5: require('../assets/img/game/cinco.png'),
+  6: require('../assets/img/game/seis.png'),
+  // Colors
+  Azul: require('../assets/img/game/azul.png'),
+  Verde: require('../assets/img/game/verde.png'),
+  Rojo: require('../assets/img/game/rojo.png'),
+  Amarillo: require('../assets/img/game/amarillo.png'),
+  Morado: require('../assets/img/game/morado.png'),
+  Naranja: require('../assets/img/game/naranja.png'),
+  Marrón: require('../assets/img/game/marron.png'),
+  // Animals
+  Vaca: require('../assets/img/game/vaca.png'),
+  Perro: require('../assets/img/game/perro.png'),
+  Conejo: require('../assets/img/game/conejo.png'),
+  Pájaro: require('../assets/img/game/pajaro.png'),
+  Elefante: require('../assets/img/game/elefante.png'),
+  León: require('../assets/img/game/leon.png'),
+  Jirafa: require('../assets/img/game/jirafa.png'),
+  // English translations
+  Blue: require('../assets/img/game/azul.png'),
+  Green: require('../assets/img/game/verde.png'),
+  Red: require('../assets/img/game/rojo.png'),
+  Yellow: require('../assets/img/game/amarillo.png'),
+  Purple: require('../assets/img/game/morado.png'),
+  Orange: require('../assets/img/game/naranja.png'),
+  Brown: require('../assets/img/game/marron.png'),
+  Cow: require('../assets/img/game/vaca.png'),
+  Dog: require('../assets/img/game/perro.png'),
+  Rabbit: require('../assets/img/game/conejo.png'),
+  Bird: require('../assets/img/game/pajaro.png'),
+  Elephant: require('../assets/img/game/elefante.png'),
+  Lion: require('../assets/img/game/leon.png'),
+  Giraffe: require('../assets/img/game/jirafa.png'),
+  // Portuguese translations
+  Azul: require('../assets/img/game/azul.png'),
+  Verde: require('../assets/img/game/verde.png'),
+  Vermelho: require('../assets/img/game/rojo.png'),
+  Amarelo: require('../assets/img/game/amarillo.png'),
+  Roxo: require('../assets/img/game/morado.png'),
+  Laranja: require('../assets/img/game/naranja.png'),
+  Marrom: require('../assets/img/game/marron.png'),
+  Vaca: require('../assets/img/game/vaca.png'),
+  Cachorro: require('../assets/img/game/perro.png'),
+  Coelho: require('../assets/img/game/conejo.png'),
+  Pássaro: require('../assets/img/game/pajaro.png'),
+  Elefante: require('../assets/img/game/elefante.png'),
+  Leão: require('../assets/img/game/leon.png'),
+  Girafa: require('../assets/img/game/jirafa.png'),
+};
+
 const GameScreen = ({route, navigation}) => {
   const {language, theme} = route.params;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [questions, setQuestions] = useState([]);
   const currentSound = useRef(null);
+  const orientation = useOrientation();
 
   useEffect(() => {
     const loadedQuestions = getQuestions(language, theme);
@@ -127,20 +187,40 @@ const GameScreen = ({route, navigation}) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.question}>{currentQuestion.question}</Text>
-      {currentQuestion.options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.option}
-          onPress={() => handleAnswer(option)}>
-          <Text style={styles.optionText}>{option}</Text>
+    <>
+      <GoBackScreen />
+      <View style={styles.container}>
+        <Text style={styles.question}>{currentQuestion.question}</Text>
+        <View
+          style={[
+            styles.optionsContainer,
+            orientation === 'LANDSCAPE' && styles.optionsContainerLandscape,
+          ]}>
+          {currentQuestion.options.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.option,
+                orientation === 'LANDSCAPE' && styles.optionLandscape,
+              ]}
+              onPress={() => handleAnswer(option)}>
+              <Image
+                source={optionImages[option]}
+                style={styles.optionImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TouchableOpacity style={styles.replayButton} onPress={replayAudio}>
+          <FontAwesomeIcon
+            icon={faRotateRight}
+            size={24}
+            color={AppColors.blanco}
+          />
         </TouchableOpacity>
-      ))}
-      <TouchableOpacity style={styles.replayButton} onPress={replayAudio}>
-        <Text style={styles.replayButtonText}>Replay Audio</Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </>
   );
 };
 
@@ -153,31 +233,51 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.amarillo,
   },
   question: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 20,
     textAlign: 'center',
     color: AppColors.azul,
+    fontWeight: 'bold',
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  optionsContainerLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
   },
   option: {
-    backgroundColor: AppColors.lima,
-    padding: 10,
-    marginVertical: 5,
-    width: '100%',
+    margin: 10,
+    width: '40%',
+    aspectRatio: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    backgroundColor: AppColors.blanco,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
-  optionText: {
-    fontSize: 16,
+  optionLandscape: {
+    width: '30%',
+  },
+  optionImage: {
+    width: '80%',
+    height: '80%',
   },
   replayButton: {
     marginTop: 20,
-    backgroundColor: '#4CAF50',
-    padding: 10,
-    borderRadius: 5,
-  },
-  replayButtonText: {
-    color: 'white',
-    fontSize: 16,
+    backgroundColor: AppColors.verde,
+    padding: 15,
+    borderRadius: 25,
   },
 });
 
