@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/styles/default-styles';
 import {useOrientation} from '../hooks/useOrientation';
-
-const {width, height} = Dimensions.get('window');
 
 const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
   const orientation = useOrientation();
@@ -20,7 +12,12 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        orientation === 'LANDSCAPE' && styles.landscapeContainer,
+        orientation === 'PORTRAIT' && styles.portraitContainer,
+      ]}>
       {languages.map(lang => (
         <TouchableOpacity
           key={lang.code}
@@ -38,35 +35,32 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignContent: 'flex-start',
-    marginBottom: 30,
+    justifyContent: 'space-around',
+    padding: 10,
+    marginLeft: 20,
   },
-  flagImage: {
-    width: width * 0.1,
-    height: width * 0.1,
-    margin: width * 0.01,
-    borderRadius: 15,
+  portraitContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    padding: 10,
+  },
+  landscapeContainer: {
+    justifyContent: 'center',
+    padding: 1,
   },
   flagButton: {
     padding: 5,
     borderRadius: 10,
-    marginRight: 10,
   },
   selectedFlag: {
     backgroundColor: AppColors.celeste,
     borderWidth: 2,
     borderColor: AppColors.azul,
+  },
+  flagImage: {
+    width: 95,
+    height: 70,
+    resizeMode: 'contain',
   },
 });
 

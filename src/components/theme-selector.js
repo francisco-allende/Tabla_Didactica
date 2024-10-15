@@ -38,25 +38,15 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignContent: 'flex-start',
-    marginBottom: 30,
+    justifyContent: 'space-around',
+    padding: 10,
+    marginRight: 20,
   },
   themeIcon: {
-    width: width * 0.1,
-    height: width * 0.1,
-    margin: width * 0.01,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    width: 95,
+    height: 70,
+    resizeMode: 'contain',
   },
   themeButton: {
     padding: 5,

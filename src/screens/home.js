@@ -189,10 +189,7 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-        <Text />
-        <Text />
-        <Text />
-        <Text />
+
         <View style={styles.gameContainer}>
           {items[selectedTheme].map((item, index) => (
             <TouchableOpacity
