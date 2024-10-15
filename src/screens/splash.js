@@ -13,10 +13,17 @@ const SplashScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/img/icono.png')} style={styles.icon} />
-      <Text style={styles.title}>Tabla Didáctica</Text>
-      <Text style={styles.info}>Francisco Allende</Text>
-      <Text style={styles.info}>División A141-2</Text>
+      <View style={styles.topSection}>
+        <Image
+          source={require('../assets/img/icono.png')}
+          style={styles.icon}
+        />
+        <Text style={styles.title}>Tabla Didáctica</Text>
+      </View>
+      <View style={styles.bottomSection}>
+        <Text style={styles.info}>Francisco Allende</Text>
+        <Text style={styles.info}>División A141-2</Text>
+      </View>
     </View>
   );
 };
@@ -24,25 +31,35 @@ const SplashScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingVertical: 50,
     backgroundColor: AppColors.celeste,
   },
+  topSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   icon: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
+    width: 200,
+    height: 200,
+    marginBottom: 30,
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginHorizontal: 20,
     color: AppColors.azul,
-    marginBottom: 20,
+  },
+  bottomSection: {
+    alignItems: 'center',
   },
   info: {
     fontSize: 18,
     color: AppColors.azul,
-    marginBottom: 10,
+    marginBottom: 15,
   },
 });
 
