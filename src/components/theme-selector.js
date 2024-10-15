@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/styles/default-styles';
-import {useOrientation} from '../hooks/useOrientation';
-
-const {width, height} = Dimensions.get('window');
 
 const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
-  const orientation = useOrientation();
   const themes = [
     {code: 'colors', icon: require('../assets/img/colors.png')},
     {code: 'animals', icon: require('../assets/img/animals.png')},
@@ -39,24 +29,24 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-    marginRight: 20,
-  },
-  themeIcon: {
-    width: 95,
-    height: 70,
-    resizeMode: 'contain',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   themeButton: {
     padding: 5,
     borderRadius: 10,
-    marginLeft: 10,
+    marginLeft: 5,
+    marginTop: 15,
   },
   selectedTheme: {
     backgroundColor: AppColors.celeste,
     borderWidth: 2,
     borderColor: AppColors.azul,
+  },
+  themeIcon: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
   },
 });
 

@@ -1,10 +1,8 @@
 import React from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/styles/default-styles';
-import {useOrientation} from '../hooks/useOrientation';
 
 const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
-  const orientation = useOrientation();
   const languages = [
     {code: 'es', flag: require('../assets/img/spain-flag.png')},
     {code: 'en', flag: require('../assets/img/usa-flag.png')},
@@ -12,12 +10,7 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
   ];
 
   return (
-    <View
-      style={[
-        styles.container,
-        orientation === 'LANDSCAPE' && styles.landscapeContainer,
-        orientation === 'PORTRAIT' && styles.portraitContainer,
-      ]}>
+    <View style={styles.container}>
       {languages.map(lang => (
         <TouchableOpacity
           key={lang.code}
@@ -36,21 +29,12 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-    marginLeft: 20,
-  },
-  portraitContainer: {
-    justifyContent: 'center',
-    padding: 10,
-  },
-  landscapeContainer: {
-    justifyContent: 'center',
-    padding: 1,
+    alignItems: 'center',
   },
   flagButton: {
     padding: 5,
     borderRadius: 10,
+    marginRight: 10,
   },
   selectedFlag: {
     backgroundColor: AppColors.celeste,
@@ -58,8 +42,8 @@ const styles = StyleSheet.create({
     borderColor: AppColors.azul,
   },
   flagImage: {
-    width: 95,
-    height: 70,
+    width: 80,
+    height: 80,
     resizeMode: 'contain',
   },
 });

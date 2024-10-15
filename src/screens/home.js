@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -117,7 +117,6 @@ const numberToWord = {
 const HomeScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('es'); // Español por defecto
   const [selectedTheme, setSelectedTheme] = useState('animals'); // Animales por defecto
-  const orientation = useOrientation();
   const currentSound = useRef(null);
 
   const items = {
@@ -171,30 +170,70 @@ const HomeScreen = () => {
     });
   };
 
+  const orientation = useOrientation();
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({window}) => {
+      setDimensions(window);
+    });
+
+    return () => subscription?.remove();
+  }, []);
+
+  const itemSize =
+    orientation === 'PORTRAIT'
+      ? dimensions.width * 0.4
+      : dimensions.width * 0.135;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <GoBackScreen />
       <View style={styles.container}>
-        <View style={styles.topRow}>
-          <View style={styles.languageContainer}>
-            <LanguageSelector
-              onSelectLanguage={handleLanguageSelect}
-              selectedLanguage={selectedLanguage}
-            />
+        {orientation === 'PORTRAIT' ? (
+          <>
+            <View style={styles.topRow}>
+              <View style={styles.languageContainer}>
+                <LanguageSelector
+                  onSelectLanguage={handleLanguageSelect}
+                  selectedLanguage={selectedLanguage}
+                />
+              </View>
+            </View>
+            <View style={styles.topRow}>
+              <View style={styles.themeContainer}>
+                <ThemeSelector
+                  onSelectTheme={handleThemeSelect}
+                  selectedTheme={selectedTheme}
+                />
+              </View>
+            </View>
+          </>
+        ) : (
+          <View style={styles.topRow}>
+            <View style={styles.languageContainer}>
+              <LanguageSelector
+                onSelectLanguage={handleLanguageSelect}
+                selectedLanguage={selectedLanguage}
+              />
+            </View>
+            <View style={styles.themeContainer}>
+              <ThemeSelector
+                onSelectTheme={handleThemeSelect}
+                selectedTheme={selectedTheme}
+              />
+            </View>
           </View>
-          <View style={styles.themeContainer}>
-            <ThemeSelector
-              onSelectTheme={handleThemeSelect}
-              selectedTheme={selectedTheme}
-            />
-          </View>
-        </View>
-
-        <View style={styles.gameContainer}>
+        )}
+        <View
+          style={[
+            styles.gameContainer,
+            orientation === 'LANDSCAPE' && styles.gameContainerLandscape,
+          ]}>
           {items[selectedTheme].map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.itemButton}
+              style={[styles.itemButton, {width: itemSize, height: itemSize}]}
               onPress={() => playSound(item)}>
               <Image
                 source={optionImages[item]}
@@ -221,17 +260,17 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 10,
+    marginBottom: 0,
   },
   languageContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
+    flex: 2,
+    alignItems: 'center',
   },
   themeContainer: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   gameContainer: {
     flex: 1,
@@ -239,11 +278,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'flex-start',
-    marginTop: 20,
+    padding: 10,
+    marginTop: 10,
   },
   itemButton: {
-    width: width * 0.14,
-    height: width * 0.14,
     margin: width * 0.01,
     backgroundColor: AppColors.celeste,
     borderRadius: 15,
@@ -254,6 +292,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    alignItems: 'center',
   },
   itemImage: {
     width: '90%',
