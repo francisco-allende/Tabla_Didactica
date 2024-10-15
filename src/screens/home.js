@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Image,
   Dimensions,
+  Text,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import LanguageSelector from '../components/language-selector';
@@ -173,25 +174,25 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <GoBackScreen />
-      <View
-        style={[
-          styles.container,
-          orientation === 'LANDSCAPE' && styles.landscapeContainer,
-        ]}>
-        <View style={styles.selectorContainer}>
-          <View style={styles.languageSelectorWrapper}>
+      <View style={styles.container}>
+        <View style={styles.topRow}>
+          <View style={styles.languageContainer}>
             <LanguageSelector
               onSelectLanguage={handleLanguageSelect}
               selectedLanguage={selectedLanguage}
             />
           </View>
-          <View style={styles.themeSelectorWrapper}>
+          <View style={styles.themeContainer}>
             <ThemeSelector
               onSelectTheme={handleThemeSelect}
               selectedTheme={selectedTheme}
             />
           </View>
         </View>
+        <Text />
+        <Text />
+        <Text />
+        <Text />
         <View style={styles.gameContainer}>
           {items[selectedTheme].map((item, index) => (
             <TouchableOpacity
@@ -218,35 +219,36 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
   },
-  landscapeContainer: {
+  topRow: {
     flexDirection: 'row',
-  },
-  selectorContainer: {
-    flexDirection: 'column',
     justifyContent: 'space-between',
-    width: '20%',
-    marginRight: 10,
+    alignItems: 'center',
+    paddingVertical: 10,
   },
-  languageSelectorWrapper: {
-    marginBottom: 20,
+  languageContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
   },
-  themeSelectorWrapper: {
-    marginTop: 20,
+  themeContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
   gameContainer: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    alignContent: 'center',
+    justifyContent: 'space-between',
+    alignContent: 'flex-start',
+    marginTop: 20,
   },
   itemButton: {
-    width: '30%',
-    aspectRatio: 1,
-    margin: '1.5%',
-    backgroundColor: AppColors.blanco,
+    width: width * 0.14,
+    height: width * 0.14,
+    margin: width * 0.01,
+    backgroundColor: AppColors.celeste,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
@@ -257,8 +259,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   itemImage: {
-    width: '80%',
-    height: '80%',
+    width: '90%',
+    height: '90%',
   },
 });
 
