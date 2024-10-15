@@ -12,12 +12,7 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
   ];
 
   return (
-    <View
-      style={[
-        styles.container,
-        orientation === 'LANDSCAPE' && styles.landscapeContainer,
-        orientation === 'PORTRAIT' && styles.portraitContainer,
-      ]}>
+    <View style={styles.container}>
       {themes.map(theme => (
         <TouchableOpacity
           key={theme.code}
@@ -36,20 +31,13 @@ const ThemeSelector = ({onSelectTheme, selectedTheme}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-  },
-  portraitContainer: {
     justifyContent: 'center',
-    padding: 10,
-  },
-  landscapeContainer: {
-    justifyContent: 'center',
-    padding: 1,
+    alignItems: 'center',
   },
   themeButton: {
     padding: 5,
     borderRadius: 10,
+    marginHorizontal: 5,
   },
   selectedTheme: {
     backgroundColor: AppColors.celeste,
@@ -57,8 +45,8 @@ const styles = StyleSheet.create({
     borderColor: AppColors.azul,
   },
   themeIcon: {
-    width: 80,
-    height: 60,
+    width: 40,
+    height: 40,
     resizeMode: 'contain',
   },
 });

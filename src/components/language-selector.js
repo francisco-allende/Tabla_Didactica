@@ -12,12 +12,7 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
   ];
 
   return (
-    <View
-      style={[
-        styles.container,
-        orientation === 'LANDSCAPE' && styles.landscapeContainer,
-        orientation === 'PORTRAIT' && styles.portraitContainer,
-      ]}>
+    <View style={styles.container}>
       {languages.map(lang => (
         <TouchableOpacity
           key={lang.code}
@@ -36,20 +31,13 @@ const LanguageSelector = ({onSelectLanguage, selectedLanguage}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-  },
-  portraitContainer: {
     justifyContent: 'center',
-    padding: 10,
-  },
-  landscapeContainer: {
-    justifyContent: 'center',
-    padding: 1,
+    alignItems: 'center',
   },
   flagButton: {
     padding: 5,
     borderRadius: 10,
+    marginHorizontal: 5,
   },
   selectedFlag: {
     backgroundColor: AppColors.celeste,
@@ -57,8 +45,8 @@ const styles = StyleSheet.create({
     borderColor: AppColors.azul,
   },
   flagImage: {
-    width: 80,
-    height: 60,
+    width: 40,
+    height: 30,
     resizeMode: 'contain',
   },
 });
