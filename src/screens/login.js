@@ -41,13 +41,10 @@ const LoginScreen = ({navigation}) => {
     await doLogin();
   };
 
-  const easyLogin = async () => {
+  const easyLogin = async userEmail => {
     try {
       setIsLoading(true);
-      await auth().signInWithEmailAndPassword(
-        'adminuno@yopmail.com',
-        '12345678',
-      );
+      await auth().signInWithEmailAndPassword(userEmail, '12345678');
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error en inicio rápido:', error);
@@ -132,13 +129,32 @@ const LoginScreen = ({navigation}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={[
-                styles.buttonEasyLogin,
+                styles.buttonEasyAdmin,
                 isLoading && styles.buttonDisabled,
               ]}
-              onPress={easyLogin}
+              onPress={() => easyLogin('adminuno@yopmail.com')}
               disabled={isLoading}>
-              <Text style={styles.buttonText}>Inicio rápido</Text>
+              <Text style={styles.buttonText}>Inicio rápido Admin</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonEasyAnon,
+                isLoading && styles.buttonDisabled,
+              ]}
+              onPress={() => easyLogin('anonimo@yopmail.com')}
+              disabled={isLoading}>
+              <Text style={styles.buttonText}>Inicio rápido Anónimo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonEasyTester,
+                isLoading && styles.buttonDisabled,
+              ]}
+              onPress={() => easyLogin('tester@yopmail.com')}
+              disabled={isLoading}>
+              <Text style={styles.buttonText}>Inicio rápido Tester</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={[styles.button, styles.registerButton]}
               onPress={() => navigation.navigate('Register')}>
@@ -217,8 +233,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  buttonEasyLogin: {
+  buttonEasyAdmin: {
     backgroundColor: AppColors.tomate,
+    borderRadius: 25,
+    padding: 15,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonEasyAnon: {
+    backgroundColor: AppColors.lima,
+    borderRadius: 25,
+    padding: 15,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonEasyTester: {
+    backgroundColor: AppColors.verde,
     borderRadius: 25,
     padding: 15,
     width: '100%',
@@ -229,7 +261,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3',
   },
   registerButton: {
-    backgroundColor: AppColors.verde,
+    backgroundColor: '#5a4bd1',
     marginTop: 10,
   },
   buttonText: {

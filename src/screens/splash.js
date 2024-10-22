@@ -15,7 +15,7 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.topSection}>
         <Image
-          source={require('../assets/img/icono.png')}
+          source={require('../assets/img/icono-transparente-tabla.png')}
           style={styles.icon}
         />
         <Text style={styles.title}>Tabla Didáctica</Text>
