@@ -7,13 +7,15 @@ import {
   Image,
   Dimensions,
   Text,
+  Platform,
+  Animated,
 } from 'react-native';
 import Sound from 'react-native-sound';
 import LanguageSelector from '../components/language-selector';
 import ThemeSelector from '../components/theme-selector';
 import {AppColors} from '../assets/styles/default-styles';
 import {useOrientation} from '../hooks/useOrientation';
-import GoBackScreen from '../components/go-back';
+import LogoutButton from '../components/log-out';
 
 Sound.setCategory('Playback');
 
@@ -119,6 +121,11 @@ const HomeScreen = () => {
   const [selectedTheme, setSelectedTheme] = useState('animals'); // Animales por defecto
   const currentSound = useRef(null);
 
+  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const [languageAnimation] = useState(new Animated.Value(0));
+  const [themeAnimation] = useState(new Animated.Value(0));
+
   const items = {
     animals: ['Vaca', 'Perro', 'Conejo', 'Pajaro', 'Elefante', 'Leon'],
     colors: ['Azul', 'Verde', 'Rojo', 'Amarillo', 'Morado', 'Naranja'],
@@ -186,63 +193,68 @@ const HomeScreen = () => {
       ? dimensions.width * 0.4
       : dimensions.width * 0.135;
 
+  const toggleLanguageMenu = () => {
+    const toValue = isLanguageMenuOpen ? 0 : 1;
+    Animated.spring(languageAnimation, {
+      toValue,
+      useNativeDriver: true,
+    }).start();
+    setIsLanguageMenuOpen(!isLanguageMenuOpen);
+  };
+
+  const toggleThemeMenu = () => {
+    const toValue = isThemeMenuOpen ? 0 : 1;
+    Animated.spring(themeAnimation, {
+      toValue,
+      useNativeDriver: true,
+    }).start();
+    setIsThemeMenuOpen(!isThemeMenuOpen);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <GoBackScreen />
       <View style={styles.container}>
         {orientation === 'PORTRAIT' ? (
-          <>
-            <View style={styles.topRow}>
-              <View style={styles.languageContainer}>
-                <LanguageSelector
-                  onSelectLanguage={handleLanguageSelect}
-                  selectedLanguage={selectedLanguage}
+          <View style={styles.gameContainer}>
+            {items[selectedTheme].map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.itemButton}
+                onPress={() => playSound(item)}>
+                <Image
+                  source={optionImages[item]}
+                  style={styles.itemImage}
+                  resizeMode="contain"
                 />
-              </View>
-            </View>
-            <View style={styles.topRow}>
-              <View style={styles.themeContainer}>
-                <ThemeSelector
-                  onSelectTheme={handleThemeSelect}
-                  selectedTheme={selectedTheme}
-                />
-              </View>
-            </View>
-          </>
+              </TouchableOpacity>
+            ))}
+          </View>
         ) : (
-          <View style={styles.topRow}>
-            <View style={styles.languageContainer}>
-              <LanguageSelector
-                onSelectLanguage={handleLanguageSelect}
-                selectedLanguage={selectedLanguage}
-              />
-            </View>
-            <View style={styles.themeContainer}>
-              <ThemeSelector
-                onSelectTheme={handleThemeSelect}
-                selectedTheme={selectedTheme}
-              />
-            </View>
+          <View style={styles.gameContainerLandscape}>
+            {items[selectedTheme].map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.itemButton, styles.itemButtonLandscape]}
+                onPress={() => playSound(item)}>
+                <Image
+                  source={optionImages[item]}
+                  style={styles.itemImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            ))}
           </View>
         )}
-        <View
-          style={[
-            styles.gameContainer,
-            orientation === 'LANDSCAPE' && styles.gameContainerLandscape,
-          ]}>
-          {items[selectedTheme].map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[styles.itemButton, {width: itemSize, height: itemSize}]}
-              onPress={() => playSound(item)}>
-              <Image
-                source={optionImages[item]}
-                style={styles.itemImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
+
+        <LanguageSelector
+          onSelectLanguage={handleLanguageSelect}
+          selectedLanguage={selectedLanguage}
+        />
+        <ThemeSelector
+          onSelectTheme={handleThemeSelect}
+          selectedTheme={selectedTheme}
+        />
+        <LogoutButton />
       </View>
     </SafeAreaView>
   );
@@ -272,31 +284,115 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+
+  languageFabContainer: {
+    position: 'absolute',
+    left: 20,
+    bottom: 20,
+    zIndex: 1000,
+  },
+  themeFabContainer: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    zIndex: 1000,
+  },
+  fabItem: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 0,
+  },
+  fabButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: AppColors.verde,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  selectedFabButton: {
+    backgroundColor: AppColors.celeste,
+    borderWidth: 2,
+    borderColor: AppColors.azul,
+  },
+  fabIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+  },
+  logoutFabButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    marginLeft: -28,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: AppColors.tomate,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 1000,
+  },
+
   gameContainer: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignContent: 'flex-start',
+    justifyContent: 'center',
+    alignContent: 'stretch', // Cambiado para estirar el contenido
     padding: 10,
-    marginTop: 10,
+    paddingTop: 20,
   },
   itemButton: {
-    margin: width * 0.01,
+    width: '48%', // Aumentado para ocupar más espacio horizontal
+    height: '32%', // Aproximadamente un tercio de la altura para 6 items
     backgroundColor: AppColors.celeste,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: '1%', // Margen pequeño para separación
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    alignItems: 'center',
   },
   itemImage: {
     width: '90%',
     height: '90%',
+    resizeMode: 'contain',
+  },
+
+  gameContainerLandscape: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'stretch',
+    padding: 10,
+    paddingTop: 20,
+  },
+  itemButtonLandscape: {
+    width: '32%', // 3 items por fila en landscape
+    height: '48%', // 2 filas para los 6 items
+    margin: '0.5%', // Margen más pequeño en landscape
   },
 });
 
